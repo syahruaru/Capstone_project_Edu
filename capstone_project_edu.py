@@ -36,7 +36,7 @@ with tab1:
     st.title('Data Sekolah Menengah Pertama (SMP) Negeri per-Kecamatan di Kota Bekasi')
     # 1. Jumlah Sekolah Per Kecamatan -> BarChart
     st.subheader('Jumlah Sekolah Per Kecamatan')
-    st.bar_chart(data=df_negeri, x='KECAMATAN', y='JUMLAH SMP NEGERI', width=0, height=0, use_container_width=True)
+    st.bar_chart(data=df_negeri, x='KECAMATAN', y='JUMLAH SMP NEGERI', use_container_width=True)
 
     with st.expander("See explanation"):
         st.write("""
@@ -113,7 +113,7 @@ with tab1:
     # Mengatur layout agar grafik memenuhi lebar halaman
     fig.update_layout(width=1400)
     # Menampilkan grafik menggunakan Streamlit
-    st.plotly_chart(fig)
+    #st.plotly_chart(fig,use_container_width=True)
     # Membuat menu dropdown untuk memilih kecamatan
     selected_kecamatan = st.selectbox('Pilih Kecamatan', df_negeri['KECAMATAN'])
     # Mendapatkan nilai rasio berdasarkan kecamatan yang dipilih
