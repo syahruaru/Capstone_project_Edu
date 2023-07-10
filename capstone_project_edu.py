@@ -26,6 +26,13 @@ with st.expander("Prolog"):
         """)
 
 
+
+
+
+
+
+
+
 tab1, tab2, tab3= st.tabs(["Negeri", "Swasta", "Perbandingan"])
 
 with tab1:
@@ -36,29 +43,32 @@ with tab1:
     st.title('Data Sekolah Menengah Pertama (SMP) Negeri per-Kecamatan di Kota Bekasi')
     # 1. Jumlah Sekolah Per Kecamatan -> BarChart
     st.subheader('Jumlah Sekolah Per Kecamatan')
-    st.bar_chart(data=df_negeri, x='KECAMATAN', y='JUMLAH SMP NEGERI', use_container_width=True)
+    df_negeri = df_negeri.sort_values(by='JUMLAH SMP NEGERI', ascending=False)
+    fig = px.bar(df_negeri, x='KECAMATAN', y='JUMLAH SMP NEGERI')
+    st.plotly_chart(fig, use_container_width=True)
+    
 
     with st.expander("See explanation"):
         st.write("""
             Grafik di atas Merupakan data jumlah SMP Negeri per-kecamatan di kota bekasi.
             Dapat dilihat kecamatan Bekasi Timur, Bekasi Utara dan Jatiasih Menjadi kecamatan dengan jumlah SMP Terbanyak di Kota Bekasi.
         """)
-
-    # 2. Perbandingan Akreditasi Sekolah -> LineChart
+    
+    # 2. Perbandingan Akreditasi Sekolah
     st.subheader('Perbandingan Akreditasi Sekolah per-Kecamatan di Kota Bekasi')
-    # Membuat DataFrame hanya dengan 4 kolom yang ingin ditampilkan
-    df_akr = pd.DataFrame(df_negeri, columns=['KECAMATAN', 'TERAKREDITASI (A)', 'TERAKREDITASI (B)', 'TERAKREDITASI (C)', 'SEKOLAH MENENGAH PERTAMA (SMP) NEGERI BELUM TERAKREDITASI'])
-    # Mengubah format data menjadi format yang cocok untuk line chart
-    df_akr = df_akr.melt('KECAMATAN', var_name='Akreditasi', value_name='Jumlah Sekolah')
-    # Membuat line chart menggunakan Plotly Express
-    fig = px.line(df_akr, x='KECAMATAN', y='Jumlah Sekolah', color='Akreditasi')
+    # Membuat bar chart menggunakan Plotly Express
+    df_negeri = df_negeri.sort_values(by='TERAKREDITASI (A)', ascending=False)
+    fig = px.bar(df_negeri, x='KECAMATAN', y=['TERAKREDITASI (A)', 'TERAKREDITASI (B)', 'TERAKREDITASI (C)', 'SEKOLAH MENENGAH PERTAMA (SMP) NEGERI BELUM TERAKREDITASI'], barmode='group')
+    # Mengatur layout agar grafik memenuhi lebar halaman
+    fig.update_layout(width=1400)
     # Menampilkan grafik menggunakan Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
     with st.expander("See explanation"):
         st.write("""
             Grafik diatas merupakan perbandingan akreditasi SMP Negeri di Kota bekasi Per-Kecamatan.
             Umumnya SMP Negeri di Kota Bekasi sudah berakreditasi (A)
         """)
+
 
     # 3. Matric Perbandingan Jumlah sekolah dengan akreditasi (A) dengan Total JUmlah sekolah per-Kecamatan
     st.subheader('Persentase sekolah dengan Akreditasi A per-Kecamatan di Kota Bekasi')
@@ -113,7 +123,7 @@ with tab1:
     # Mengatur layout agar grafik memenuhi lebar halaman
     fig.update_layout(width=1400)
     # Menampilkan grafik menggunakan Streamlit
-    #st.plotly_chart(fig,use_container_width=True)
+    st.plotly_chart(fig)
     # Membuat menu dropdown untuk memilih kecamatan
     selected_kecamatan = st.selectbox('Pilih Kecamatan', df_negeri['KECAMATAN'])
     # Mendapatkan nilai rasio berdasarkan kecamatan yang dipilih
@@ -205,7 +215,7 @@ with tab1:
         """)
 
     # 8. Perbandingan kualifikasi guru
-    st.subheader('Perbandingan Jumlah Guru Bersertifikat di SMP Negeri')
+    st.subheader('Perbandingan kualifikasi guru di SMP Negeri')
     # Membuat bar chart menggunakan Plotly Express
     fig = px.bar(df_negeri, x='KECAMATAN', y=['JUMLAH GURU SMP NEGERI KUALIFIKASI D3/D4', 'JUMLAH GURU SMP NEGERI KUALIFIKASI S1', 'JUMLAH GURU SMP NEGERI KUALIFIKASI S2'], barmode='group')
     # Mengatur layout agar grafik memenuhi lebar halaman
@@ -344,9 +354,9 @@ with tab2:
     # Membuat bar chart menggunakan Plotly Express
     fig_s = px.bar(df_s, x='KECAMATAN', y=['JUMLAH TOTAL SISWA', 'JUMLAH TOTAL GURU SMP SWASTA'], barmode='group')
     # Mengatur layout agar grafik memenuhi lebar halaman
-    fig_s.update_layout(width=1400)
+    #fig_s.update_layout(width=1400)
     # Menampilkan grafik menggunakan Streamlit
-    st.plotly_chart(fig_s)
+    st.plotly_chart(fig_s, use_container_width=True)
     # Membuat menu dropdown untuk memilih kecamatan
     selected_kecamatan_s = st.selectbox('Pilih Kecamatan Sekolah Swasta', df_s['KECAMATAN'])
     # Mendapatkan nilai rasio berdasarkan kecamatan yang dipilih
@@ -438,7 +448,7 @@ with tab2:
         """)
 
     # 8. Perbandingan kualifikasi guru
-    st.subheader('Perbandingan Jumlah Guru Bersertifikat di SMP Swasta')
+    st.subheader('Perbandingan kualifikasi guru di SMP Swasta')
     # Membuat bar chart menggunakan Plotly Express
     fig = px.bar(df_s, x='KECAMATAN', y=['JUMLAH GURU SMP SWASTA KUALIFIKASI D3/D4', 'JUMLAH GURU SMP SWASTA KUALIFIKASI S1', 'JUMLAH GURU SMP SWASTA KUALIFIKASI S2'], barmode='group')
     # Mengatur layout agar grafik memenuhi lebar halaman
